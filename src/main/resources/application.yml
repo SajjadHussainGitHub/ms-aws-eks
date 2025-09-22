@@ -1,5 +1,19 @@
 server:
-  port: 8089
+  port: 8080
 spring:
   application:
         name: ms-aws-eks
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+info:
+  app:
+    name: ms-aws-eks
+    version: 1.0.0

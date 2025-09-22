@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: ms-aws-eks
+    labels:
+        app: ms-aws-eks
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: ms-aws-eks
+    template: 
+        metadata:
+           labels:
+              app: ms-aws-eks
+        spec:
+          containers:
+             - name: ms-aws-eks
+               image: sajjad83/ms-aws-eks:latest
+               ports: 
+                 - containerPort: 8080
+               readinessProbe:
+                   httpGet:
+                        path: /actuator/health
+                        port: 8080
+                   initialDelaySeconds: 10
+                   periodSeconds: 10
+               livenessProbe:
+                   httpGet:
+                      path: /actuator/health
+                      port: 8080
+                   initialDelaySeconds: 30
+                   periodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata: 
+    name: ms-aws-eks
+spec:
+   type: LoadBalancer
+   selector: 
+      app: ms-aws-eks
+   ports:
+      - port: 80
+        targetPort: 8080
